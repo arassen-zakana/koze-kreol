@@ -1,105 +1,95 @@
-
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import React, { useState } from 'react';
 
 const dictionary = {
   creole_to_english: {
-    "mo": "I", "pa": "not", "tro": "too", "konpran": "understand", "eski": "is it that", "to": "you", "kapav": "can", "explike": "explain"
+    mo: 'I', pa: 'not', tro: 'too', konpran: 'understand', eski: 'is it that', to: 'you', kapav: 'can', explike: 'explain'
   },
   creole_to_french: {
-    "mo": "je", "pa": "pas", "tro": "trop", "konpran": "comprendre", "eski": "est-ce que", "to": "tu", "kapav": "peux", "explike": "expliquer"
+    mo: 'je', pa: 'pas', tro: 'trop', konpran: 'comprendre', eski: 'est-ce que', to: 'tu', kapav: 'peux', explike: 'expliquer'
   },
   english_to_creole: {
-    "i": "mo", "don't": "pa", "understand": "konpran", "can": "kapav", "you": "to", "explain": "explike"
+    i: 'mo', "don't": 'pa', understand: 'konpran', can: 'kapav', you: 'to', explain: 'explike'
   },
   french_to_creole: {
-    "je": "mo", "pas": "pa", "trop": "tro", "comprendre": "konpran", "peux": "kapav", "tu": "to", "expliquer": "explike"
+    je: 'mo', pas: 'pa', trop: 'tro', comprendre: 'konpran', peux: 'kapav', tu: 'to', expliquer: 'explike'
   }
 };
 
-export default function KozeKreolTranslator() {
-  const [inputText, setInputText] = useState("");
-  const [translatedText, setTranslatedText] = useState("");
-  const [suggestion, setSuggestion] = useState("");
-  const [mode, setMode] = useState("creole_to_english");
+function App() {
+  const [inputText, setInputText] = useState('');
+  const [translatedText, setTranslatedText] = useState('');
+  const [suggestion, setSuggestion] = useState('');
+  const [mode, setMode] = useState('creole_to_english');
 
   const translate = () => {
     const dict = dictionary[mode];
     const translated = inputText
       .toLowerCase()
       .split(/\s+/)
-      .map((word) => dict[word.replace(/[^\w]/g, "")] || `[${word}]`)
-      .join(" ");
+      .map(word => dict[word.replace(/[^\w]/g, '')] || `[${word}]`)
+      .join(' ');
     setTranslatedText(translated);
   };
 
   const handleSuggestionSubmit = () => {
     if (suggestion.trim()) {
-      console.log("User suggestion:", suggestion);
-      alert("Thank you for your feedback! (Logged in console)");
-      setSuggestion("");
-    }
-  };
-
-  const getModeLabel = (m) => {
-    switch (m) {
-      case "creole_to_english": return "Creole → English";
-      case "creole_to_french": return "Creole → French";
-      case "english_to_creole": return "English → Creole";
-      case "french_to_creole": return "French → Creole";
-      default: return m;
+      console.log('User suggestion:', suggestion);
+      alert('Thank you for your feedback! (Logged in console)');
+      setSuggestion('');
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold text-center">Koze Kreol Translator</h1>
+    <div style={{ maxWidth: '600px', margin: '0 auto', padding: '1rem', fontFamily: 'sans-serif' }}>
+      <h1 style={{ textAlign: 'center' }}>🗣️ Koze Kreol Translator</h1>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="w-full">
-            {getModeLabel(mode)}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full">
-          {Object.keys(dictionary).map((m) => (
-            <DropdownMenuItem key={m} onSelect={() => setMode(m)}>
-              {getModeLabel(m)}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div style={{ marginBottom: '1rem' }}>
+        <select
+          value={mode}
+          onChange={e => setMode(e.target.value)}
+          style={{ width: '100%', padding: '0.5rem' }}
+        >
+          <option value="creole_to_english">Creole → English</option>
+          <option value="creole_to_french">Creole → French</option>
+          <option value="english_to_creole">English → Creole</option>
+          <option value="french_to_creole">French → Creole</option>
+        </select>
+      </div>
 
-      <Textarea
+      <textarea
         placeholder="Type your sentence..."
         value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
+        onChange={e => setInputText(e.target.value)}
+        rows={4}
+        style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
       />
 
-      <Button onClick={translate} className="w-full">
+      <button
+        onClick={translate}
+        style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px' }}
+      >
         Translate
-      </Button>
+      </button>
 
-      <Card>
-        <CardContent className="p-4 whitespace-pre-wrap">
-          {translatedText || "Your translation will appear here..."}
-        </CardContent>
-      </Card>
+      <div style={{ border: '1px solid #ccc', padding: '1rem', minHeight: '60px', marginBottom: '1rem', backgroundColor: '#f9f9f9' }}>
+        {translatedText || 'Your translation will appear here...'}
+      </div>
 
-      <Textarea
+      <textarea
         placeholder="Suggest a better translation (optional)..."
         value={suggestion}
-        onChange={(e) => setSuggestion(e.target.value)}
-        className="mt-4"
+        onChange={e => setSuggestion(e.target.value)}
+        rows={2}
+        style={{ width: '100%', padding: '0.5rem', marginBottom: '0.5rem' }}
       />
-
-      <Button onClick={handleSuggestionSubmit} className="w-full" variant="secondary">
+      <button
+        onClick={handleSuggestionSubmit}
+        style={{ width: '100%', padding: '0.5rem', backgroundColor: '#eaeaea', border: '1px solid #ccc', borderRadius: '4px' }}
+      >
         Submit Suggestion
-      </Button>
+      </button>
     </div>
   );
 }
+
+export default App;
